@@ -14,16 +14,42 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QPushButton" name="closeButton">
     <property name="geometry">
      <rect>
-      <x>1</x>
-      <y>31</y>
-      <width>788</width>
-      <height>616</height>
+      <x>700</x>
+      <y>10</y>
+      <width>91</width>
+      <height>31</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_6">
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Closes the program.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton#closeButton:hover {
+     background-color: rgb(255, 117, 119);
+ }</string>
+    </property>
+    <property name="text">
+     <string>Close</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>2</x>
+      <y>32</y>
+      <width>785</width>
+      <height>631</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
       <widget class="QLabel" name="label_10">
        <property name="font">
@@ -63,7 +89,7 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>786</width>
+         <width>783</width>
          <height>13</height>
         </size>
        </property>
@@ -88,103 +114,109 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>786</width>
+         <width>783</width>
          <height>13</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="startDateLabel">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Start date:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QDateTimeEdit" name="startDateEdit">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
+        <widget class="QLabel" name="startDateLabel">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Start date:</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QLabel" name="endDateLabel">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>End date:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QDateTimeEdit" name="endDateEdit">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
+        <widget class="QDateTimeEdit" name="startDateEdit">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date format is dd.mm.yyyy (UCT-time).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_5">
+        <spacer name="horizontalSpacer">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>20</width>
-           <height>40</height>
+           <width>40</width>
+           <height>20</height>
           </size>
          </property>
         </spacer>
        </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="endDateLabel">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>End date:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDateTimeEdit" name="endDateEdit">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date format is dd.mm.yyyy (UCT-time).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QPushButton" name="executeButton">
          <property name="font">
@@ -194,13 +226,33 @@
            <bold>false</bold>
           </font>
          </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Executes the query.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="styleSheet">
-          <string notr="true"/>
+          <string notr="true">QPushButton#executeButton:hover {
+     background-color: rgb(153, 255, 44);
+ }
+
+</string>
          </property>
          <property name="text">
           <string>EXECUTE QUERY</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>448</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>
@@ -211,7 +263,7 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>786</width>
+         <width>783</width>
          <height>13</height>
         </size>
        </property>
@@ -229,7 +281,7 @@
             </font>
            </property>
            <property name="text">
-            <string>A) The longest longest bearish (downward) trend within a given date range is:</string>
+            <string>A) The longest longest bearish (downward) trend in days within a given date range is:</string>
            </property>
            <property name="wordWrap">
             <bool>false</bool>
@@ -237,7 +289,16 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="bearTrendLengthEdit"/>
+          <widget class="QLineEdit" name="bearTrendLengthEdit">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output is number of days (integer).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
          </item>
          <item>
           <spacer name="verticalSpacer_3">
@@ -264,12 +325,21 @@
             </font>
            </property>
            <property name="text">
-            <string>B) Date with the highest trading volume within the given date range:</string>
+            <string>B) Date (dd.mm.yyyy) with the highest trading volume within the given date range:</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="highestVolumeDayEdit"/>
+          <widget class="QLineEdit" name="highestVolumeDayEdit">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date format is dd.mm.yyyy (UCT-time). Total volume is in euros.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
          </item>
          <item>
           <spacer name="verticalSpacer_2">
@@ -304,7 +374,13 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="investmentAdviceEdit"/>
+          <widget class="QLineEdit" name="investmentAdviceEdit">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+          </widget>
          </item>
          <item>
           <spacer name="verticalSpacer">
@@ -324,27 +400,6 @@
       </layout>
      </item>
     </layout>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>700</x>
-      <y>10</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Closes the program.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="text">
-     <string>Close</string>
-    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

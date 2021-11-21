@@ -17,6 +17,9 @@
 #include <QDateTime>
 #include <QString>
 #include <QJsonValue>
+#include <vector>
+#include <algorithm>
+
 
 namespace Ui {
 class mainUI;
@@ -52,9 +55,20 @@ public:
 
     void loadData();
 
+    void calculateLongestBearTrend();
+    void findHighestVolumeDay(std::map<double, double> targetMap);
+    void giveInvestmentRecommendation();
+    std::string unixTimeToHumanReadable(long int seconds, bool showTime = false);
+    void initializeGUI();
+
+    void clearCachedData();
 
 
-    void testPrintMaps();
+
+
+
+
+
 
 
 
@@ -62,9 +76,12 @@ public:
 private slots:
     void on_executeButton_clicked();
 
-    void on_pushButton_clicked();
+    void on_closeButton_clicked();
 
     void onResult(QNetworkReply *reply);
+
+
+
 
 private:
     Ui::mainUI *ui;
@@ -74,6 +91,11 @@ private:
     std::string strUnixStartTime_;
     std::string strUnixEndTime_;
     QUrl coingeckoUrl_;
+
+    QDate startDate_;
+    QDate endDate_;
+
+    unsigned int daysBetween;
 
     QJsonDocument jsonDocument_;
     QJsonObject jsonObject_;
@@ -88,6 +110,8 @@ private:
     std::map<double, double> pricesMap_;
     std::map<double, double> marketCapsMap_;
     std::map<double, double> totalVolumesMap_;
+
+    std::map<QDateTime, double> uctDatePrices_;
 
 
 
