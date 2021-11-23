@@ -19,9 +19,6 @@ mainUI::mainUI(QWidget *parent) :
 
     networkManager_ = new QNetworkAccessManager(this);
     connect(networkManager_, &QNetworkAccessManager::finished, this, &mainUI::onResult);
-    //connect(ui->executeButton, &QPushButton::clicked, this, &mainUI::onResult);
-
-
 
 }
 
@@ -67,19 +64,41 @@ std::map<double, double> mainUI::readData(QJsonArray array)
 {
 
     std::map<double, double> dataStorage;
+
+    // This array contains the closest to midnight [unixTimeStamp, value] subarrays
+    QJsonArray transformedArray;
+
+    int arraySizeCounter = 0;
     for(int i = 0; i < array.size(); ++i){
 
-        if (daysBetween >= 1 && daysBetween <= 90){
-            /*not done*/
-        } else if (daysBetween > 90) {
-            /*not done*/
-        } else {
-            /*not done*/
+        QJsonArray tempArray;
+
+        if (daysBetween_ < 1) {
+
+            tempArray = array.last().toArray();
+
         }
-        QJsonArray tempArray = array.at(i).toArray();
+
+        else if (daysBetween_ >= 1 && daysBetween_ < 90){
+
+            if(arraySizeCounter % 24 == 0) {
+
+                tempArray = array.at(i).toArray();
+
+            }
+
+        } else if (daysBetween_ >= 90) {
+            tempArray = array.at(i).toArray();
 
 
-        dataStorage.insert({ tempArray.at(0).toDouble(), tempArray.at(1).toDouble() });
+        }
+
+
+        ++arraySizeCounter;
+
+        if(dataStorage.size() < daysBetween_) {
+            dataStorage.insert({ tempArray.at(0).toDouble(), tempArray.at(1).toDouble() });
+        }
 
     }
     return dataStorage;
@@ -105,6 +124,12 @@ void mainUI::loadData()
     marketCapsMap_ = readData(marketCapsArray_);
     totalVolumesMap_ = readData(totalVolumesArray_);
 
+    qDebug()<<"pricesMap_ size (amount of days): "<<pricesMap_.size();
+    qDebug()<<"marketCapsMap_ size (amount of days): "<<marketCapsMap_.size();
+    qDebug()<<"totalVolumesMap_ size (amount of days): "<<totalVolumesMap_.size();
+
+    qDebug()<<"days between: "<<daysBetween_;
+
 }
 
 void mainUI::calculateLongestBearTrend()
@@ -121,20 +146,29 @@ void mainUI::calculateLongestBearTrend()
     }
 
 
-    int currentSeq = 1, longestSeq = 1;
+    int downSequence = 1;
+    int longestDownSequence = 1;
 
     for (int i = 1; i < (int) prices.size(); i++) {
 
         try {
-            if (prices.at(i) < prices.at(i - 1)) {
-                ++currentSeq;
+
+
+
+            if(prices.at(i) <= prices.at(i - 1)) {
+                downSequence++;
+
             } else {
-                currentSeq = 0;
+                if(downSequence > longestDownSequence) {
+                    longestDownSequence = downSequence;
+                }
+                downSequence = 1;
             }
 
+            if (downSequence > longestDownSequence) {
+                longestDownSequence = downSequence;
+            }
 
-            if (currentSeq > longestSeq)
-                longestSeq = currentSeq;
         }
 
         catch (...) {
@@ -144,8 +178,8 @@ void mainUI::calculateLongestBearTrend()
     }
     qDebug()<<"vector size: "<< prices.size();
 
-    qDebug()<<QString::number(longestSeq);
-    ui->bearTrendLengthEdit->setText(QString::number(longestSeq));
+    qDebug()<<QString::number(longestDownSequence);
+    ui->bearTrendLengthEdit->setText(QString::number(longestDownSequence));
 
 }
 
@@ -218,11 +252,13 @@ void mainUI::on_executeButton_clicked()
     startDate_ = ui->startDateEdit->date();
     endDate_ = ui->endDateEdit->date();
 
-    daysBetween = static_cast<unsigned int>(startDate_.daysTo(endDate_));
+    unsigned int delta = static_cast<unsigned int>(startDate_.daysTo(endDate_));
 
-
-
-
+    if(delta > 1) {
+        daysBetween_ = delta + 1;
+    } else {
+        daysBetween_ = delta;
+    }
 
 
 }
@@ -281,7 +317,7 @@ std::string mainUI::unixTimeToHumanReadable(long int seconds, bool showTime)
 
 
     int daysInAMonth[] = { 31, 28, 31, 30, 31, 30,
-                          31, 31, 30, 31, 30, 31 };
+                           31, 31, 30, 31, 30, 31 };
 
     long int currentYear, daysTillNow, extraTime,
             extraDays, index, date, month, hours,
@@ -405,16 +441,16 @@ void mainUI::clearCachedData()
     marketCapsMap_.clear();
 
     while(pricesArray_.count()) {
-         pricesArray_.pop_back();
-     }
+        pricesArray_.pop_back();
+    }
 
     while(marketCapsArray_.count()) {
-         marketCapsArray_.pop_back();
-     }
+        marketCapsArray_.pop_back();
+    }
 
     while(totalVolumesArray_.count()) {
-         totalVolumesArray_.pop_back();
-     }
+        totalVolumesArray_.pop_back();
+    }
 
     //qDebug()<< "array size after cleanup: "<<totalVolumesArray_.size();
 

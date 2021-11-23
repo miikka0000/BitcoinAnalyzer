@@ -95,7 +95,7 @@ private:
     QDate startDate_;
     QDate endDate_;
 
-    unsigned int daysBetween;
+    unsigned int daysBetween_;
 
     QJsonDocument jsonDocument_;
     QJsonObject jsonObject_;
