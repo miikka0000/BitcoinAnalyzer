@@ -96,9 +96,10 @@ std::map<double, double> mainUI::readData(QJsonArray array)
 
         ++arraySizeCounter;
 
-        if(dataStorage.size() < daysBetween_) {
+        if(dataStorage.size() < daysBetween_ && tempArray.at(0).toDouble() != 0 && tempArray.at(1).toDouble() != 0) {
             dataStorage.insert({ tempArray.at(0).toDouble(), tempArray.at(1).toDouble() });
         }
+
 
     }
     return dataStorage;
@@ -153,8 +154,6 @@ void mainUI::calculateLongestBearTrend()
 
         try {
 
-
-
             if(prices.at(i) <= prices.at(i - 1)) {
                 downSequence++;
 
@@ -178,8 +177,9 @@ void mainUI::calculateLongestBearTrend()
     }
     qDebug()<<"vector size: "<< prices.size();
 
-    qDebug()<<QString::number(longestDownSequence);
+    qDebug()<<QString::number(longestDownSequence +1);
     ui->bearTrendLengthEdit->setText(QString::number(longestDownSequence));
+    longestBearTrend_ = longestDownSequence;
 
 }
 
@@ -187,6 +187,10 @@ void mainUI::calculateLongestBearTrend()
 
 void mainUI::giveInvestmentRecommendation()
 {
+    if ((unsigned int) longestBearTrend_ == daysBetween_) {
+        ui->investmentAdviceEdit->setText(QString("You should HOLD bitcoin for in the given date range"));
+        return;
+    }
 
 }
 
@@ -208,14 +212,13 @@ void mainUI::findHighestVolumeDay(std::map<double, double> targetMap)
         // If this entry's value is more
         // than the max value
         // Set this entry as the max
-        if (currentEntry->second
-                > entryWithMaxValue.second) {
+        if (currentEntry->second > entryWithMaxValue.second) {
 
-            entryWithMaxValue
-                    = std::make_pair(
+            entryWithMaxValue = std::make_pair(
                         currentEntry->first,
                         currentEntry->second);
         }
+
     }
 
 
@@ -254,11 +257,11 @@ void mainUI::on_executeButton_clicked()
 
     unsigned int delta = static_cast<unsigned int>(startDate_.daysTo(endDate_));
 
-    if(delta > 1) {
-        daysBetween_ = delta + 1;
-    } else {
-        daysBetween_ = delta;
-    }
+
+   daysBetween_ = delta + 1;
+
+
+
 
 
 }
@@ -292,9 +295,7 @@ void mainUI::onResult(QNetworkReply *reply)
         qDebug()<<"marketcapsMap size: "<<marketCapsMap_.size();
         qDebug()<<"totalVolumesMap size: "<<totalVolumesMap_.size();
 
-        calculateLongestBearTrend();
-        findHighestVolumeDay(totalVolumesMap_);
-        giveInvestmentRecommendation();
+        executeQueries();
 
         qDebug()<<"''''''''''''''''''''''''''''''''''''   This query ended '''''''''''''''''''''''''''''''''''''";
 
@@ -423,7 +424,7 @@ std::string mainUI::unixTimeToHumanReadable(long int seconds, bool showTime)
 
 void mainUI::initializeGUI()
 {
-    ui->endDateEdit->setTime(QTime(1, 0, 0));
+    //ui->endDateEdit->setTime(QTime(1, 0, 0));
 
     ui->startDateEdit->setDate(QDate(2020, 3, 1));
     ui->endDateEdit->setDate(QDate(2021, 8, 1));
@@ -454,6 +455,18 @@ void mainUI::clearCachedData()
 
     //qDebug()<< "array size after cleanup: "<<totalVolumesArray_.size();
 
+
+}
+
+void mainUI::executeQueries()
+{
+    calculateLongestBearTrend();
+    findHighestVolumeDay(totalVolumesMap_);
+    giveInvestmentRecommendation();
+
+    qDebug()<<pricesMap_;
+    qDebug()<<marketCapsMap_;
+    qDebug()<<totalVolumesMap_;
 
 }
 

@@ -21,6 +21,10 @@
 #include <algorithm>
 
 
+#include <iostream>
+#include <algorithm>
+#include <map>
+
 namespace Ui {
 class mainUI;
 }
@@ -63,15 +67,7 @@ public:
 
     void clearCachedData();
 
-
-
-
-
-
-
-
-
-
+    void executeQueries();
 
 private slots:
     void on_executeButton_clicked();
@@ -96,6 +92,8 @@ private:
     QDate endDate_;
 
     unsigned int daysBetween_;
+
+    int longestBearTrend_;
 
     QJsonDocument jsonDocument_;
     QJsonObject jsonObject_;
