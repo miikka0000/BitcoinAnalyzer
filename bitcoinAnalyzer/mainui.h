@@ -1,8 +1,6 @@
 #ifndef MAINUI_H
 #define MAINUI_H
 
-
-
 #include <QMainWindow>
 #include <QDateTime>
 #include <string>
@@ -12,13 +10,15 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 
-
 namespace Ui {
 class mainUI;
 }
 
 class QNetworkAccessManager;
 
+/*!
+ * \brief The mainUI class is the class that contain all the functionality of the main menu.
+ */
 class mainUI : public QMainWindow
 {
     Q_OBJECT
@@ -40,9 +40,22 @@ public:
 
     struct times timeVars;
 
+    /*!
+     * \brief initializeGUI function initializez the mainMenu GUI
+     */
     void initializeGUI();
 
+    /*!
+     * \brief setTimes sets the times given by the user in the mainMenu.
+     */
     void setTimes();
+
+    /*!
+     * \brief unixTimeToHumanReadable converts unix timestamp to human readable UCT-time.
+     * \param seconds
+     * \param showTime is default false but when set to true, it also outputs the time in the result query.
+     * \return Time (string) as a human readable UCT-time.
+     */
     std::string unixTimeToHumanReadable(long int seconds, bool showTime = false);
 
     std::map<double, double> readData(QJsonArray array);

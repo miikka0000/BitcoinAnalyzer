@@ -330,7 +330,6 @@ std::string mainUI::unixTimeToHumanReadable(long int seconds, bool showTime)
         }
     }
 
-
     if (extraDays > 0) {
         month += 1;
         date = extraDays;

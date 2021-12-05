@@ -25,6 +25,7 @@
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>12</pointsize>
      </font>
     </property>
@@ -54,6 +55,7 @@
       <widget class="QLabel" name="label_10">
        <property name="font">
         <font>
+         <family>Arial</family>
          <pointsize>14</pointsize>
          <weight>75</weight>
          <bold>true</bold>
@@ -71,6 +73,7 @@
       <widget class="QLabel" name="label_3">
        <property name="font">
         <font>
+         <family>Arial</family>
          <pointsize>12</pointsize>
          <weight>75</weight>
          <bold>true</bold>
@@ -99,6 +102,7 @@
       <widget class="QLabel" name="label">
        <property name="font">
         <font>
+         <family>Arial</family>
          <pointsize>12</pointsize>
         </font>
        </property>
@@ -126,6 +130,7 @@
         <widget class="QLabel" name="startDateLabel">
          <property name="font">
           <font>
+           <family>Arial</family>
            <pointsize>12</pointsize>
           </font>
          </property>
@@ -138,6 +143,7 @@
         <widget class="QDateTimeEdit" name="startDateEdit">
          <property name="font">
           <font>
+           <family>Arial</family>
            <pointsize>12</pointsize>
           </font>
          </property>
@@ -167,6 +173,7 @@
         <widget class="QLabel" name="endDateLabel">
          <property name="font">
           <font>
+           <family>Arial</family>
            <pointsize>12</pointsize>
           </font>
          </property>
@@ -179,6 +186,7 @@
         <widget class="QDateTimeEdit" name="endDateEdit">
          <property name="font">
           <font>
+           <family>Arial</family>
            <pointsize>12</pointsize>
           </font>
          </property>
@@ -221,6 +229,7 @@
         <widget class="QPushButton" name="executeButton">
          <property name="font">
           <font>
+           <family>Arial</family>
            <pointsize>12</pointsize>
            <weight>50</weight>
            <bold>false</bold>
@@ -277,6 +286,7 @@
           <widget class="QLabel" name="label_4">
            <property name="font">
             <font>
+             <family>Arial</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -292,6 +302,7 @@
           <widget class="QLineEdit" name="bearTrendLengthEdit">
            <property name="font">
             <font>
+             <family>Arial</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -321,6 +332,7 @@
           <widget class="QLabel" name="label_5">
            <property name="font">
             <font>
+             <family>Arial</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -333,6 +345,7 @@
           <widget class="QLineEdit" name="highestVolumeDayEdit">
            <property name="font">
             <font>
+             <family>Arial</family>
              <pointsize>10</pointsize>
             </font>
            </property>
@@ -362,11 +375,12 @@
           <widget class="QLabel" name="label_6">
            <property name="font">
             <font>
+             <family>Arial</family>
              <pointsize>12</pointsize>
             </font>
            </property>
            <property name="text">
-            <string>C) Best days to sell and buy bitcoin to maximize profits withing the given date range. If you should not sell or buy, the output will be &quot;HOLD YOUR HORSES&quot;</string>
+            <string>C) Best days to sell and buy bitcoin to maximize profits withing the given date range. If you should not sell or buy, the output will be &quot;HOLD&quot;</string>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
@@ -377,6 +391,7 @@
           <widget class="QLineEdit" name="investmentAdviceEdit">
            <property name="font">
             <font>
+             <family>Arial</family>
              <pointsize>12</pointsize>
             </font>
            </property>
