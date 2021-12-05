@@ -12,6 +12,9 @@
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 
 
 
@@ -22,40 +25,49 @@ class dataParser
 const std::string FIAT_CURRENCY = "eur";
 const std::string CRYPTO_ID = "bitcoin";
 
-const std::string REQUEST_URL = "https://api.coingecko.com/api/v3/coins/" + CRYPTO_ID +
-        "/market_chart/range?vs_currency=" + FIAT_CURRENCY + "&from=" + unixStartTime_ +
-        "&to=" + unixEndTime_;
-
 public:
     dataParser();
 
-    void parseData();
+    std::map<double, double> readData(QJsonArray array);
+
+    void arrayElemsToArray(QJsonArray jsonArray);
+
     void loadData();
-    void onResult(QNetworkReply *reply);
+
+    std::string unixTimeToHumanReadable(long int seconds, bool showTime = false);
+
+
+
 
     QNetworkAccessManager *networkAccessManager;
     QNetworkReply *reply;
 
 private:
 
-    QUrl url_;
-    //UTC time
-    std::string uctStartTime_;
-    std::string uctEndTime_;
+    unsigned int daysBetween_;
 
-    // UNIX time
-    std::string unixStartTime_;
-    std::string unixEndTime_;
+    int longestBearTrend_;
+
+    QJsonDocument jsonDocument_;
+    QJsonObject jsonObject_;
+
+    QJsonArray pricesArray_;
+    QJsonArray marketCapsArray_;
+    QJsonArray totalVolumesArray_;
+
+    QJsonValue jsonValue_;
 
     // map data structures that hold the relevent data
-    std::map<int, int> prices_;
-    std::map<int, int> marketCaps_;
-    std::map<int, int> totalVolumes_;
+    std::map<double, double> pricesMap_;
+    std::map<double, double> marketCapsMap_;
+    std::map<double, double> totalVolumesMap_;
+
+    std::map<QDateTime, double> uctDatePrices_;
 
     // iterators for later use when iterating through maps
-    std::map<int, int>::iterator pricesIterator_ = prices_.begin();
-    std::map<int, int>::iterator marketCapsIterator_ = marketCaps_.begin();
-    std::map<int, int>::iterator totalVolumesIterator_ = totalVolumes_.begin();
+    std::map<double, double>::iterator pricesIterator_ = pricesMap_.begin();
+    std::map<double, double>::iterator marketCapsIterator_ = marketCapsMap_.begin();
+    std::map<double, double>::iterator totalVolumesIterator_ = totalVolumesMap_.begin();
 
 
 };

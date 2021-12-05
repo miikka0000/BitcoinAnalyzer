@@ -1,14 +1,12 @@
 #include "mainui.h"
 #include "ui_mainui.h"
-#include "dataparser.h"
 
+#include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QNetworkRequest>
-#include <QDateTime>
-#include <QTime>
+#include <vector>
+#include <iostream>
 #include <bits/stdc++.h>
-
 
 mainUI::mainUI(QWidget *parent) :
     QMainWindow(parent),
@@ -32,7 +30,6 @@ mainUI::~mainUI()
 void mainUI::setTimes()
 {
 
-
     // get UCT-times from user input
     timeVars.uctStartTime_ = ui->startDateEdit->dateTime();
     timeVars.uctEndTime_ = ui->endDateEdit->dateTime();
@@ -46,7 +43,6 @@ void mainUI::setTimes()
     timeVars.unixEndTime_ = timeVars.uctEndTime_.toTime_t();
 
     // convert the unix-times to string for API request URL
-
     strUnixStartTime_ = std::to_string(timeVars.unixStartTime_);
     strUnixEndTime_ = std::to_string(timeVars.unixEndTime_);
 
@@ -57,12 +53,10 @@ void mainUI::setTimes()
 
     coingeckoUrl_ = QUrl(QString::fromStdString(REQUEST_URL));
 
-    qDebug()<< coingeckoUrl_;
 }
 
 std::map<double, double> mainUI::readData(QJsonArray array)
 {
-
     std::map<double, double> dataStorage;
 
     // This array contains the closest to midnight [unixTimeStamp, value] subarrays
@@ -84,23 +78,17 @@ std::map<double, double> mainUI::readData(QJsonArray array)
             if(arraySizeCounter % 24 == 0) {
 
                 tempArray = array.at(i).toArray();
-
             }
 
         } else if (daysBetween_ >= 90) {
             tempArray = array.at(i).toArray();
-
-
         }
-
 
         ++arraySizeCounter;
 
         if(dataStorage.size() < daysBetween_ && tempArray.at(0).toDouble() != 0 && tempArray.at(1).toDouble() != 0) {
             dataStorage.insert({ tempArray.at(0).toDouble(), tempArray.at(1).toDouble() });
         }
-
-
     }
     return dataStorage;
 }
@@ -109,7 +97,6 @@ void mainUI::arrayElemsToArray(QJsonArray jsonArray)
 {
     for(int i = 0; i < jsonArray.size(); ++i){
         jsonArray.at(i).toArray();
-
     }
 }
 
@@ -125,27 +112,17 @@ void mainUI::loadData()
     marketCapsMap_ = readData(marketCapsArray_);
     totalVolumesMap_ = readData(totalVolumesArray_);
 
-    qDebug()<<"pricesMap_ size (amount of days): "<<pricesMap_.size();
-    qDebug()<<"marketCapsMap_ size (amount of days): "<<marketCapsMap_.size();
-    qDebug()<<"totalVolumesMap_ size (amount of days): "<<totalVolumesMap_.size();
-
-    qDebug()<<"days between: "<<daysBetween_;
-
 }
 
 void mainUI::calculateLongestBearTrend()
 {
-
     std::vector<double> prices;
 
-
+    // populating the prices vector that contains all the close prices for the days in the given date period
     for (pricesIterator_=pricesMap_.begin(); pricesIterator_!=pricesMap_.end(); ++pricesIterator_) {
 
-
         prices.push_back(pricesIterator_->second);
-
     }
-
 
     int downSequence = 1;
     int longestDownSequence = 1;
@@ -175,15 +152,10 @@ void mainUI::calculateLongestBearTrend()
             break;
         }
     }
-    qDebug()<<"vector size: "<< prices.size();
-
-    qDebug()<<QString::number(longestDownSequence +1);
+    // update the value to the GUI
     ui->bearTrendLengthEdit->setText(QString::number(longestDownSequence));
     longestBearTrend_ = longestDownSequence;
-
 }
-
-
 
 void mainUI::giveInvestmentRecommendation()
 {
@@ -193,8 +165,6 @@ void mainUI::giveInvestmentRecommendation()
     }
 
 }
-
-
 
 void mainUI::findHighestVolumeDay(std::map<double, double> targetMap)
 {
@@ -209,18 +179,15 @@ void mainUI::findHighestVolumeDay(std::map<double, double> targetMap)
          currentEntry != targetMap.end();
          ++currentEntry) {
 
-        // If this entry's value is more
-        // than the max value
-        // Set this entry as the max
+        /* If this entry's value is more
+        than the max value Set this entry as the max*/
         if (currentEntry->second > entryWithMaxValue.second) {
 
             entryWithMaxValue = std::make_pair(
                         currentEntry->first,
                         currentEntry->second);
         }
-
     }
-
 
     // date as unix timestamp
     QString unixDateWithHighestVolume = QString().setNum(entryWithMaxValue.first, 'g', 15);
@@ -235,8 +202,8 @@ void mainUI::findHighestVolumeDay(std::map<double, double> targetMap)
 
     qDebug()<<"unix day with highest volume: "<<unixDateWithHighestVolume.toDouble()<<" and total volume in euros: "<<totalEurVolume;
 
+    // update the value to the GUI
     ui->highestVolumeDayEdit->setText(QString("The date with the highest volume: " + uctDateWithHighestVolume + " and the total volume:  " + totalEurVolume + " euros."));
-
 }
 
 
@@ -245,38 +212,28 @@ void mainUI::on_executeButton_clicked()
     // storing the necessary times in right formats from the user input
     setTimes();
 
-    qDebug() << "Unix start time is: " << timeVars.unixStartTime_;
-    qDebug() << "Unix end time is: " << timeVars.unixEndTime_;
-
     networkManager_->get(QNetworkRequest(coingeckoUrl_));
-
-    qDebug()<<"new GET request created!";
 
     startDate_ = ui->startDateEdit->date();
     endDate_ = ui->endDateEdit->date();
 
     unsigned int delta = static_cast<unsigned int>(startDate_.daysTo(endDate_));
 
-
+    // how many days there are in the given date range
    daysBetween_ = delta + 1;
 
-
-
-
-
 }
-
 void mainUI::on_closeButton_clicked()
 {
     this->close();
 }
-
 void mainUI::onResult(QNetworkReply *reply)
 {
     // If there are no errors
     if(!reply->error()){
+
+        // Clear the cached data from previous queries
         clearCachedData();
-        qDebug()<<"new get request arrived, fetching reply...";
 
         // So create an object Json Document, by reading into it all the data from the response
         jsonDocument_ = QJsonDocument::fromJson(reply->readAll());
@@ -288,34 +245,21 @@ void mainUI::onResult(QNetworkReply *reply)
         marketCapsArray_ = jsonObject_.value("market_caps").toArray();
         totalVolumesArray_ = jsonObject_.value("total_volumes").toArray();
 
-
+        // load the data into STL map containers
         loadData();
-
-        qDebug()<<"pricesmap size: "<<pricesMap_.size();
-        qDebug()<<"marketcapsMap size: "<<marketCapsMap_.size();
-        qDebug()<<"totalVolumesMap size: "<<totalVolumesMap_.size();
 
         executeQueries();
 
-        qDebug()<<"''''''''''''''''''''''''''''''''''''   This query ended '''''''''''''''''''''''''''''''''''''";
-
-
-
-
+        qDebug()<<"**********************************************   This query ended    **********************************************";
     }
 
     reply->deleteLater();
 }
 
-
-
 std::string mainUI::unixTimeToHumanReadable(long int seconds, bool showTime)
 {
 
-
     std::string humanReadableTime = "";
-
-
 
     int daysInAMonth[] = { 31, 28, 31, 30, 31, 30,
                            31, 31, 30, 31, 30, 31 };
@@ -421,7 +365,6 @@ std::string mainUI::unixTimeToHumanReadable(long int seconds, bool showTime)
     return humanReadableTime;
 }
 
-
 void mainUI::initializeGUI()
 {
     //ui->endDateEdit->setTime(QTime(1, 0, 0));
@@ -453,9 +396,6 @@ void mainUI::clearCachedData()
         totalVolumesArray_.pop_back();
     }
 
-    //qDebug()<< "array size after cleanup: "<<totalVolumesArray_.size();
-
-
 }
 
 void mainUI::executeQueries()
@@ -463,11 +403,6 @@ void mainUI::executeQueries()
     calculateLongestBearTrend();
     findHighestVolumeDay(totalVolumesMap_);
     giveInvestmentRecommendation();
-
-    qDebug()<<pricesMap_;
-    qDebug()<<marketCapsMap_;
-    qDebug()<<totalVolumesMap_;
-
 }
 
 

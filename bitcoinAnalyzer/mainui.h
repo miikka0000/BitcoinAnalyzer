@@ -1,29 +1,17 @@
 #ifndef MAINUI_H
 #define MAINUI_H
 
+
+
 #include <QMainWindow>
-#include <QJsonObject>
-#include <memory>
+#include <QDateTime>
 #include <string>
 #include <map>
-#include <QUrl>
-#include <QNetworkReply>
 #include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QUrlQuery>
+#include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
-#include <QDebug>
-#include <QDateTime>
-#include <QString>
-#include <QJsonValue>
-#include <vector>
-#include <algorithm>
 
-
-#include <iostream>
-#include <algorithm>
-#include <map>
 
 namespace Ui {
 class mainUI;
@@ -35,13 +23,13 @@ class mainUI : public QMainWindow
 {
     Q_OBJECT
 
-
 public:
     explicit mainUI(QWidget *parent = nullptr);
     ~mainUI();
 
     const std::string FIAT_CURRENCY = "eur";
     const std::string CRYPTO_ID = "bitcoin";
+    std::string REQUEST_URL;
 
     struct times {
         QDateTime uctStartTime_;
@@ -49,23 +37,23 @@ public:
         uint unixStartTime_;
         uint unixEndTime_;
     };
+
     struct times timeVars;
-    std::string REQUEST_URL;
+
+    void initializeGUI();
 
     void setTimes();
+    std::string unixTimeToHumanReadable(long int seconds, bool showTime = false);
+
     std::map<double, double> readData(QJsonArray array);
+    void loadData();
+    void clearCachedData();
 
     void arrayElemsToArray(QJsonArray jsonArray);
-
-    void loadData();
 
     void calculateLongestBearTrend();
     void findHighestVolumeDay(std::map<double, double> targetMap);
     void giveInvestmentRecommendation();
-    std::string unixTimeToHumanReadable(long int seconds, bool showTime = false);
-    void initializeGUI();
-
-    void clearCachedData();
 
     void executeQueries();
 
@@ -76,13 +64,9 @@ private slots:
 
     void onResult(QNetworkReply *reply);
 
-
-
-
 private:
     Ui::mainUI *ui;
     QNetworkAccessManager *networkManager_;
-
 
     std::string strUnixStartTime_;
     std::string strUnixEndTime_;
@@ -111,14 +95,8 @@ private:
 
     std::map<QDateTime, double> uctDatePrices_;
 
-
-
-    // iterators for later use when iterating through maps
+    // iterator for later use when iterating through the map
     std::map<double, double>::iterator pricesIterator_ = pricesMap_.begin();
-    std::map<double, double>::iterator marketCapsIterator_ = marketCapsMap_.begin();
-    std::map<double, double>::iterator totalVolumesIterator_ = totalVolumesMap_.begin();
-
-
 
 };
 

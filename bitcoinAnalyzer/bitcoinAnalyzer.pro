@@ -4,12 +4,10 @@ CONFIG += c++14
 
 
 SOURCES += \
-        dataparser.cpp \
         main.cpp \
         mainui.cpp
 
 HEADERS += \
-    dataparser.h \
     mainui.h
 
 FORMS += \
