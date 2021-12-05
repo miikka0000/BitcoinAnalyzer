@@ -63,9 +63,11 @@ public:
     void clearCachedData();
 
     void arrayElemsToArray(QJsonArray jsonArray);
+    std::pair<double, double> findHighestEntry(std::map<double, double> targetMap);
+    std::pair<double, double> findLowestEntry(std::map<double, double> targetMap);
 
     void calculateLongestBearTrend();
-    void findHighestVolumeDay(std::map<double, double> targetMap);
+    void findHighestVolumeDay();
     void giveInvestmentRecommendation();
 
     void executeQueries();
@@ -91,6 +93,12 @@ private:
     unsigned int daysBetween_;
 
     int longestBearTrend_;
+
+    // stores the highest closing price for bitcoin in the given date range
+    double highestBitcoinPrice_;
+    // stores the lowest closing value for bitcoin in the given date range
+    double lowestBitcoinPrice_;
+
 
     QJsonDocument jsonDocument_;
     QJsonObject jsonObject_;

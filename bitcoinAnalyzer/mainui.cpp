@@ -24,12 +24,10 @@ mainUI::~mainUI()
 {
     delete ui;
     delete networkManager_;
-
 }
 
 void mainUI::setTimes()
 {
-
     // get UCT-times from user input
     timeVars.uctStartTime_ = ui->startDateEdit->dateTime();
     timeVars.uctEndTime_ = ui->endDateEdit->dateTime();
@@ -100,6 +98,41 @@ void mainUI::arrayElemsToArray(QJsonArray jsonArray)
     }
 }
 
+std::pair<double, double> mainUI::findLowestEntry(std::map<double, double> targetMap)
+{
+    auto it = std::min_element(std::begin(targetMap), std::end(targetMap),
+                               [](const auto& l, const auto& r) { return l.second < r.second; });
+
+    std::pair<double, double> entryWithMinValue = std::make_pair(it->first, it->second);
+
+    return entryWithMinValue;
+}
+
+std::pair<double, double> mainUI::findHighestEntry(std::map<double, double> targetMap)
+{
+    // Reference variable to help find the entry with the highest value
+    std::pair<double, double> entryWithMaxValue
+            = std::make_pair(0, 0);
+
+    // Iterate in the map to find the required entry
+    std::map<double, double>::iterator currentEntry;
+    for (currentEntry = targetMap.begin();
+         currentEntry != targetMap.end();
+         ++currentEntry) {
+
+        /* If this entry's value is more
+        than the max value set this entry as the max*/
+        if (currentEntry->second > entryWithMaxValue.second) {
+
+            entryWithMaxValue = std::make_pair(
+                        currentEntry->first,
+                        currentEntry->second);
+        }
+    }
+    return std::make_pair(entryWithMaxValue.first, entryWithMaxValue.second);
+}
+
+
 void mainUI::loadData()
 {
     // convert all the elements to actual arrays
@@ -153,41 +186,43 @@ void mainUI::calculateLongestBearTrend()
         }
     }
     // update the value to the GUI
-    ui->bearTrendLengthEdit->setText(QString::number(longestDownSequence));
+
+    QString numberOfDays = QString::number(longestDownSequence);
+    ui->bearTrendLengthEdit->setText(QString(numberOfDays + " days."));
     longestBearTrend_ = longestDownSequence;
 }
 
 void mainUI::giveInvestmentRecommendation()
 {
+
+    // entryWithMaxValue and  entryWithMinValue is of type (unixTimestamp, price)
+    std::pair<double, double> entryWithMaxValue = findHighestEntry(pricesMap_);
+    std::pair<double, double> entryWithMinValue= findLowestEntry(pricesMap_);
+
+    long int secondsForMax = (long int) (entryWithMaxValue.first / 1000);
+    long int secondsForMin = (long int) (entryWithMinValue.first / 1000);
+
+    // one should sell when the BTC price is at is highest and buy when the price is at its lowest
+    QString bestDayToBuy = QString::fromStdString(unixTimeToHumanReadable(secondsForMin));
+    QString bestDayToSell = QString::fromStdString(unixTimeToHumanReadable(secondsForMax));
+
+    qDebug()<<"min bitcoin price: "<<entryWithMinValue.first << "and the date when it occured: " <<bestDayToBuy;
+    qDebug()<<"max bitcoin price: "<<entryWithMaxValue.first << "and the date when it occured: " << bestDayToSell;
+
+
     if ((unsigned int) longestBearTrend_ == daysBetween_) {
         ui->investmentAdviceEdit->setText(QString("You should HOLD bitcoin for in the given date range"));
         return;
+    } else {
+        ui->investmentAdviceEdit->setText(QString("The best day to buy bitcoin: " + bestDayToBuy +
+                                                  " and the the best day to sell bitcoin: " + bestDayToSell + "."));
     }
 
 }
 
-void mainUI::findHighestVolumeDay(std::map<double, double> targetMap)
+void mainUI::findHighestVolumeDay()
 {
-    // Reference variable to help find
-    // the entry with the highest value
-    std::pair<double, double> entryWithMaxValue
-            = std::make_pair(0, 0);
-
-    // Iterate in the map to find the required entry
-    std::map<double, double>::iterator currentEntry;
-    for (currentEntry = targetMap.begin();
-         currentEntry != targetMap.end();
-         ++currentEntry) {
-
-        /* If this entry's value is more
-        than the max value Set this entry as the max*/
-        if (currentEntry->second > entryWithMaxValue.second) {
-
-            entryWithMaxValue = std::make_pair(
-                        currentEntry->first,
-                        currentEntry->second);
-        }
-    }
+    std::pair<double, double> entryWithMaxValue = findHighestEntry(totalVolumesMap_);
 
     // date as unix timestamp
     QString unixDateWithHighestVolume = QString().setNum(entryWithMaxValue.first, 'g', 15);
@@ -220,7 +255,7 @@ void mainUI::on_executeButton_clicked()
     unsigned int delta = static_cast<unsigned int>(startDate_.daysTo(endDate_));
 
     // how many days there are in the given date range
-   daysBetween_ = delta + 1;
+    daysBetween_ = delta + 1;
 
 }
 void mainUI::on_closeButton_clicked()
@@ -400,7 +435,7 @@ void mainUI::clearCachedData()
 void mainUI::executeQueries()
 {
     calculateLongestBearTrend();
-    findHighestVolumeDay(totalVolumesMap_);
+    findHighestVolumeDay();
     giveInvestmentRecommendation();
 }
 
