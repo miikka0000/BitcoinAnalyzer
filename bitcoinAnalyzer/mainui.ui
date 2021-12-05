@@ -291,7 +291,7 @@
             </font>
            </property>
            <property name="text">
-            <string>A) The longest longest bearish (downward) trend in days within a given date range is:</string>
+            <string>A) The longest longest bearish (downward) trend in days within the given date range is:</string>
            </property>
            <property name="wordWrap">
             <bool>false</bool>
