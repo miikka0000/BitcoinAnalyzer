@@ -1,7 +1,8 @@
 # BitcoinAnalyzer
 
 A program coded with QT Creator and C++ that fetches bitcoin price data from Goincecko API https://www.coingecko.com/en/api/documentation
-and calculates 3 queries based on the fetched data.
+and calculates 3 queries based on the fetched data. The GET request functionality is made by SSL-protocol to read, parse, clean and transform the raw data into usable
+format. Documentation of the program is available via Doxygen in the repository root.
 
 ## The three queries that the user can run (as of now) are the following: 
 

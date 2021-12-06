@@ -45,7 +45,7 @@
     <property name="geometry">
      <rect>
       <x>2</x>
-      <y>32</y>
+      <y>8</y>
       <width>785</width>
       <height>631</height>
      </rect>
@@ -397,25 +397,17 @@
            </property>
           </widget>
          </item>
-         <item>
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
         </layout>
        </item>
       </layout>
      </item>
     </layout>
+    <zorder>label_10</zorder>
+    <zorder>label</zorder>
+    <zorder>label_3</zorder>
    </widget>
+   <zorder>layoutWidget</zorder>
+   <zorder>closeButton</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

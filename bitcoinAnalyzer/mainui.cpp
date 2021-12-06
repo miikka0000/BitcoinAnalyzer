@@ -4,11 +4,12 @@
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QJsonObject>
+#include <QJsonDocument>
 #include <vector>
 #include <iostream>
-#include <bits/stdc++.h>
 
-mainUI::mainUI(QWidget *parent) :
+bitcoinAnalyzer::mainUI::mainUI(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::mainUI)
 {
@@ -17,16 +18,15 @@ mainUI::mainUI(QWidget *parent) :
 
     networkManager_ = new QNetworkAccessManager(this);
     connect(networkManager_, &QNetworkAccessManager::finished, this, &mainUI::onResult);
-
 }
 
-mainUI::~mainUI()
+bitcoinAnalyzer::mainUI::~mainUI()
 {
     delete ui;
     delete networkManager_;
 }
 
-void mainUI::setTimes()
+void bitcoinAnalyzer::mainUI::setTimes()
 {
     // get UCT-times from user input
     timeVars.uctStartTime_ = ui->startDateEdit->dateTime();
@@ -40,20 +40,20 @@ void mainUI::setTimes()
     timeVars.unixStartTime_ = timeVars.uctStartTime_.toTime_t();
     timeVars.unixEndTime_ = timeVars.uctEndTime_.toTime_t();
 
-    // convert the unix-times to string for API request URL
-    strUnixStartTime_ = std::to_string(timeVars.unixStartTime_);
-    strUnixEndTime_ = std::to_string(timeVars.unixEndTime_);
+    // convert the unix-times to string for API FETCH request URL
+    timeVars.strUnixStartTime_ = std::to_string(timeVars.unixStartTime_);
+    timeVars.strUnixEndTime_ = std::to_string(timeVars.unixEndTime_);
 
     // preparing the correct URL for data fetching
     REQUEST_URL = "https://api.coingecko.com/api/v3/coins/" + CRYPTO_ID +
-            "/market_chart/range?vs_currency=" + FIAT_CURRENCY + "&from=" + strUnixStartTime_ +
-            "&to=" + strUnixEndTime_;
+            "/market_chart/range?vs_currency=" + FIAT_CURRENCY + "&from=" + timeVars.strUnixStartTime_ +
+            "&to=" + timeVars.strUnixEndTime_;
 
     coingeckoUrl_ = QUrl(QString::fromStdString(REQUEST_URL));
 
 }
 
-std::map<double, double> mainUI::readData(QJsonArray array)
+std::map<double, double> bitcoinAnalyzer::mainUI::readData(QJsonArray array)
 {
     std::map<double, double> dataStorage;
 
@@ -91,14 +91,14 @@ std::map<double, double> mainUI::readData(QJsonArray array)
     return dataStorage;
 }
 
-void mainUI::arrayElemsToArray(QJsonArray jsonArray)
+void bitcoinAnalyzer::mainUI::arrayElemsToArray(QJsonArray jsonArray)
 {
     for(int i = 0; i < jsonArray.size(); ++i){
         jsonArray.at(i).toArray();
     }
 }
 
-std::pair<double, double> mainUI::findLowestEntry(std::map<double, double> targetMap)
+std::pair<double, double> bitcoinAnalyzer::mainUI::findLowestEntry(std::map<double, double> targetMap)
 {
     auto it = std::min_element(std::begin(targetMap), std::end(targetMap),
                                [](const auto& l, const auto& r) { return l.second < r.second; });
@@ -108,7 +108,7 @@ std::pair<double, double> mainUI::findLowestEntry(std::map<double, double> targe
     return entryWithMinValue;
 }
 
-std::pair<double, double> mainUI::findHighestEntry(std::map<double, double> targetMap)
+std::pair<double, double> bitcoinAnalyzer::mainUI::findHighestEntry(std::map<double, double> targetMap)
 {
     // Reference variable to help find the entry with the highest value
     std::pair<double, double> entryWithMaxValue
@@ -133,7 +133,7 @@ std::pair<double, double> mainUI::findHighestEntry(std::map<double, double> targ
 }
 
 
-void mainUI::loadData()
+void bitcoinAnalyzer::mainUI::loadData()
 {
     // convert all the elements to actual arrays
     arrayElemsToArray(pricesArray_);
@@ -147,7 +147,7 @@ void mainUI::loadData()
 
 }
 
-void mainUI::calculateLongestBearTrend()
+void bitcoinAnalyzer::mainUI::calculateLongestBearTrend()
 {
     std::vector<double> prices;
 
@@ -177,7 +177,6 @@ void mainUI::calculateLongestBearTrend()
             if (downSequence > longestDownSequence) {
                 longestDownSequence = downSequence;
             }
-
         }
 
         catch (...) {
@@ -192,7 +191,7 @@ void mainUI::calculateLongestBearTrend()
     longestBearTrend_ = longestDownSequence;
 }
 
-void mainUI::giveInvestmentRecommendation()
+void bitcoinAnalyzer::mainUI::giveInvestmentRecommendation()
 {
 
     // entryWithMaxValue and  entryWithMinValue is of type (unixTimestamp, price)
@@ -220,7 +219,7 @@ void mainUI::giveInvestmentRecommendation()
 
 }
 
-void mainUI::findHighestVolumeDay()
+void bitcoinAnalyzer::mainUI::findHighestVolumeDay()
 {
     std::pair<double, double> entryWithMaxValue = findHighestEntry(totalVolumesMap_);
 
@@ -242,7 +241,7 @@ void mainUI::findHighestVolumeDay()
 }
 
 
-void mainUI::on_executeButton_clicked()
+void bitcoinAnalyzer::mainUI::on_executeButton_clicked()
 {
     // storing the necessary times in right formats from the user input
     setTimes();
@@ -258,11 +257,11 @@ void mainUI::on_executeButton_clicked()
     daysBetween_ = delta + 1;
 
 }
-void mainUI::on_closeButton_clicked()
+void bitcoinAnalyzer::mainUI::on_closeButton_clicked()
 {
     this->close();
 }
-void mainUI::onResult(QNetworkReply *reply)
+void bitcoinAnalyzer::mainUI::onResult(QNetworkReply *reply)
 {
     // If there are no errors
     if(!reply->error()){
@@ -271,14 +270,14 @@ void mainUI::onResult(QNetworkReply *reply)
         clearCachedData();
 
         // So create an object Json Document, by reading into it all the data from the response
-        jsonDocument_ = QJsonDocument::fromJson(reply->readAll());
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(reply->readAll());
 
         // Taking from the document root object
-        jsonObject_ = jsonDocument_.object();
+        QJsonObject jsonObject = jsonDocument.object();
 
-        pricesArray_ = jsonObject_.value("prices").toArray();
-        marketCapsArray_ = jsonObject_.value("market_caps").toArray();
-        totalVolumesArray_ = jsonObject_.value("total_volumes").toArray();
+        pricesArray_ = jsonObject.value("prices").toArray();
+        marketCapsArray_ = jsonObject.value("market_caps").toArray();
+        totalVolumesArray_ = jsonObject.value("total_volumes").toArray();
 
         // load the data into STL map containers
         loadData();
@@ -291,7 +290,7 @@ void mainUI::onResult(QNetworkReply *reply)
     reply->deleteLater();
 }
 
-std::string mainUI::unixTimeToHumanReadable(long int seconds, bool showTime)
+std::string bitcoinAnalyzer::mainUI::unixTimeToHumanReadable(long int seconds, bool showTime)
 {
 
     std::string humanReadableTime = "";
@@ -399,20 +398,19 @@ std::string mainUI::unixTimeToHumanReadable(long int seconds, bool showTime)
     return humanReadableTime;
 }
 
-void mainUI::initializeGUI()
+void bitcoinAnalyzer::mainUI::initializeGUI()
 {
-    //ui->endDateEdit->setTime(QTime(1, 0, 0));
 
     ui->startDateEdit->setDate(QDate(2020, 3, 1));
     ui->endDateEdit->setDate(QDate(2021, 8, 1));
 
-    // disabling the possibility to edit the humanReadableTimewers of our queries
+    // disabling the possibility to edit the textLineEditBoxes of our queries
     ui->bearTrendLengthEdit->setReadOnly(true);
     ui->highestVolumeDayEdit->setReadOnly(true);
     ui->investmentAdviceEdit->setReadOnly(true);
 }
 
-void mainUI::clearCachedData()
+void bitcoinAnalyzer::mainUI::clearCachedData()
 {
     pricesMap_.clear();
     totalVolumesMap_.clear();
@@ -432,7 +430,7 @@ void mainUI::clearCachedData()
 
 }
 
-void mainUI::executeQueries()
+void bitcoinAnalyzer::mainUI::executeQueries()
 {
     calculateLongestBearTrend();
     findHighestVolumeDay();

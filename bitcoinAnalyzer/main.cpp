@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    mainUI mainMenu;
+    bitcoinAnalyzer::mainUI mainMenu;
     mainMenu.show();
     return a.exec();
 }
