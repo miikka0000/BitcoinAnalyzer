@@ -18,3 +18,10 @@ C) Best days to sell, buy or hold bitcoin to maximize profits within the given d
 
 - PDF-documentation file in repository root (bitcoinAnalyzerDocumentation.pfd) OR
 - Doxygen documentation (HTML) in ./DoxygenDocumentation/html/index.html
+
+## Executable file now available (tested in Windows10 environment)
+bitcoinAnalyzer.exe file now available for download in the releases-section of this repository.
+
+## DISCLAIMERS
+* The software is provided as is.
+* The software is not commercialized in any way.
