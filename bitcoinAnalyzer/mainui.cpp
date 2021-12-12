@@ -243,10 +243,6 @@ void bitcoinAnalyzer::mainUI::findHighestVolumeDay()
 
 void bitcoinAnalyzer::mainUI::on_executeButton_clicked()
 {
-    // storing the necessary times in right formats from the user input
-    setTimes();
-
-    networkManager_->get(QNetworkRequest(coingeckoUrl_));
 
     startDate_ = ui->startDateEdit->date();
     endDate_ = ui->endDateEdit->date();
@@ -254,7 +250,23 @@ void bitcoinAnalyzer::mainUI::on_executeButton_clicked()
     unsigned int delta = static_cast<unsigned int>(startDate_.daysTo(endDate_));
 
     // how many days there are in the given date range
-    daysBetween_ = delta + 1;
+    daysBetween_ = delta;
+
+    qDebug() << "Days between: "<<daysBetween_;
+
+    if(daysBetween_ == 0) {
+        // clearing the text from the query output labels
+        ui->bearTrendLengthEdit->clear();
+        ui->highestVolumeDayEdit->clear();
+        ui->investmentAdviceEdit->clear();
+
+        ui->statusMessageLabel->setText(QString("<font color='red'>Start and end dates cannot be the same!</font>"));
+        return;
+    }
+    // storing the necessary times in right formats from the user input
+    setTimes();
+
+    networkManager_->get(QNetworkRequest(coingeckoUrl_));
 
 }
 void bitcoinAnalyzer::mainUI::on_closeButton_clicked()
@@ -284,7 +296,13 @@ void bitcoinAnalyzer::mainUI::onResult(QNetworkReply *reply)
 
         executeQueries();
 
+        ui->statusMessageLabel->setText(QString("<font color='green'>Queries executed successfully!</font>"));
+
         qDebug()<<"**********************************************   This query ended    **********************************************";
+
+    } else if(reply->error()){
+    ui->statusMessageLabel->setText(QString("<font color='red'>Something went wrong with the API GET request, please check"
+                                            " your internet connection and try again!</font>"));
     }
 
     reply->deleteLater();

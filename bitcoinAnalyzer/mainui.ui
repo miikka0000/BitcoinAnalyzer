@@ -266,6 +266,19 @@
       </layout>
      </item>
      <item>
+      <widget class="QLabel" name="statusMessageLabel">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="verticalSpacer_4">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -405,6 +418,11 @@
     <zorder>label_10</zorder>
     <zorder>label</zorder>
     <zorder>label_3</zorder>
+    <zorder>statusMessageLabel</zorder>
+    <zorder>verticalSpacer_5</zorder>
+    <zorder>verticalSpacer_6</zorder>
+    <zorder>verticalSpacer_7</zorder>
+    <zorder>verticalSpacer_4</zorder>
    </widget>
    <zorder>layoutWidget</zorder>
    <zorder>closeButton</zorder>
