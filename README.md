@@ -8,15 +8,15 @@ format.
 
 <b>The three queries that the user can run (as of now) are the following: </b>
 
-A) The longest bearish (downward) trend in days within the given date range.
+<b>1)</b> The longest bearish (downward) trend in days within the given date range.
 
-B) Date (in format dd.mm.yyyy) with the highest trading volume within the given date range.
+<b>2)</b> Date (in format dd.mm.yyyy) with the highest trading volume within the given date range.
 
-C) Best days to sell, buy or hold bitcoin to maximize profits within the given date range. 
+<b>3)</b> Best days to sell, buy or hold bitcoin to maximize profits within the given date range. 
 
 ## Doumentation
 
-- PDF-documentation file in repository root (bitcoinAnalyzerDocumentation.pfd) OR
+- PDF-documentation file in repository root (bitcoinAnalyzerDocumentation.pdf) OR
 - Doxygen documentation (HTML) in ./DoxygenDocumentation/html/index.html
 
 ## Executable file now available (tested in Windows10 environment)
