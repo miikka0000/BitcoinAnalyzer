@@ -4,7 +4,7 @@ A program coded with QT Creator and C++ in my spare time. The program fetches bi
 and calculates 3 queries based on the fetched data. The GET request functionality is made by SSL-protocol to read, parse, clean and transform the raw data into usable
 format.
 
-<h2>NOTICE that you need network conection in order to run the queries successfully!</h2>
+<h2>NOTICE that you need network connection in order to run the queries successfully!</h2>
 
 <b>The three queries that the user can run (as of now) are the following: </b>
 
